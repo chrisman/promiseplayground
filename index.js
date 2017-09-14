@@ -42,17 +42,16 @@ const user = db.getUsers(1)
   db.getWorkoutsByUserId(users[0].id) // workouts
 ]))
 .then(([user, workouts]) => Promise.all([
-  Object.assign({}, user, {workouts}),                                     // userWithWorkouts
-  Promise.all(workouts.map(workout => db.getLiftsByWorkoutId(workout.id))) // lifts
+  Object.assign({}, user, { workouts }),                                   // userWithWorkouts
+  Promise.all(workouts.map(workout => db.getLiftsByWorkoutId(workout.id))) // workoutLifts
 ]))
-.then(([userWithWorkouts, _lifts]) => {
+.then(([userWithWorkouts, workoutLifts]) => {
   const workouts = userWithWorkouts.workouts.map(workout => {
-    const lifts = _lifts.find(lift => lift.some(l => l.id === workout.id));
-    return Object.assign({}, workout, { lifts })
+    const lifts = workoutLifts.find(lifts => lifts.some(lift => lift.workout_id === workout.id));
+    return Object.assign({}, workout, { lifts });
   });
 
-  const result = Object.assign({}, userWithWorkouts, { workouts })
-  return result;
+  return Object.assign({}, userWithWorkouts, { workouts });
 });
 
 user.then(result => { console.log(JSON.stringify(result)) });
