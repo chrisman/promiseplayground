@@ -68,11 +68,11 @@ Instead you can do something like this:
 
 ```javascript
 Promise.all(ids.map(id => db.getThing(id))).then(things => {
-	/* do something with things */
+  /* do something with things */
 })
 ```
 
-You map your ids to a bunch of asyncronous calls. Then you have an array full of promises which you can pass to `Promise.all` to ensure that they all get resolved before moving on. 
+You map your ids to a bunch of asyncronous calls. Then you have an array full of promises which you can pass to `Promise.all` to ensure that they all get resolved before moving on.
 
 ## Putting the two together
 
