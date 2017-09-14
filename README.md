@@ -1,6 +1,6 @@
 # Promise Playground
 
-a couple of suggestions on using promises
+A couple of suggestions on using promises
 
 ## Flatten nested promises with `Promise.all`
 
@@ -17,21 +17,21 @@ var p1 = Promise.resolve(3);
 var p2 = 1337;
 var p3 = new Promise((resolve, reject) => {
   setTimeout(resolve, 100, 'foo');
-}); 
+});
 
-Promise.all([p1, p2, p3]).then(values => { 
-  console.log(values); // [3, 1337, "foo"] 
+Promise.all([p1, p2, p3]).then(values => {
+  console.log(values); // [3, 1337, "foo"]
 });
 ```
-that means you can easly do not this:
+that means you can easily do not this:
 
 ```javascript
 get_thing(id).then(thing =>
-  get_other_thing(thing.id).then(other_thing => 
+  get_other_thing(thing.id).then(other_thing =>
     get_final_thing(other_thing.id)))
 ```
 
-but this:
+But this:
 
 ```javascript
 get_thing(id).then(thing => Promise.all([
@@ -50,6 +50,36 @@ get_thing(id).then(thing => Promise.all([
 
 Then you have nice flat promises, and you have all of your values in the final block to do stuff with.
 
+## mind your iterations
+
+If you have a list of things you need to perform async operations on, you can't just loop iteratively over them:
+
+```javascript
+ids.forEach(id => {
+  db.getThing(id).then(thing => { /* do stuff */});
+});
+
+return;
+```
+
+The promises above are returned asynchronously; The loop will finish and you'll hit the return before all the values are returned.
+
+Instead you can do something like this:
+
+```javascript
+Promise.all(ids.map(id => db.getThing(id))).then(things => { /* do something with things */})
+```
+
+And, if you're using async functions, this gets really straightforward:
+
+```javascript
+async function() {
+  const things = await Promise.all(ids.map(id => db.getThing(id)));
+  /* do stuff */
+  return things;
+}
+```
+
 ## also
 
-see the `async-await` branch for the same example made even more readable and simple using async/await.
+See the `async-await` branch for a version of index.js even more readable and simple using async/await.
