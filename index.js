@@ -1,7 +1,9 @@
 const { createDatabase } = require('./create-database');
 const db = createDatabase();
 
-// the key thing to notice here is that you can flatten out your promises by using Promise.all to pass down the results of each step down to the next block.
+// the key thing to notice here is that you can flatten out your promises by
+// using Promise.all to pass down the results of each step down to the next
+// block.
 const user = db.getUsers(1)
 .then(users => Promise.all([
   users[0],                           // user
